@@ -14,17 +14,22 @@ export default function Messages() {
     );
   if (error)
     return (
-      <Alert status="error" mt="20px">
-        {error}
-        <Button
-          ml="5px"
-          onClick={getMessagesAndSubscribe}
-          colorScheme="red"
-          variant="link"
-        >
-          try to reconnect
-        </Button>
-      </Alert>
+      <Alert.Root status="error" mt="20px">
+        <Alert.Indicator />
+        <Alert.Content>
+          <Alert.Description>
+            {error}
+            <Button
+              ml="5px"
+              onClick={getMessagesAndSubscribe}
+              colorPalette="red"
+              variant="plain"
+            >
+              try to reconnect
+            </Button>
+          </Alert.Description>
+        </Alert.Content>
+      </Alert.Root>
     );
 
   if (!messages.length)

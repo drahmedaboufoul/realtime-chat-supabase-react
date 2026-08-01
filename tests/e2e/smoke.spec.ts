@@ -1,5 +1,16 @@
 import { expect, test } from "@playwright/test";
 
+// The app talks to Supabase on first paint, and the suite runs against a
+// placeholder project. Failing those calls immediately keeps the smoke test
+// measuring the app shell instead of how long a hostname takes to give up,
+// which is what made this hang for the full poll window on CI runners.
+test.beforeEach(async ({ page, baseURL }) => {
+  await page.route("**/*", async (route) => {
+    const sameOrigin = route.request().url().startsWith(baseURL ?? "");
+    await (sameOrigin ? route.continue() : route.abort());
+  });
+});
+
 // A boot smoke test: the entry route must serve a real, titled, rendered page
 // and must not throw while doing it. It deliberately asserts nothing about
 // product copy so it stays green across redesigns.
